@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Website</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="weatherbg">
+        <div>
+            <div class="search-con">
+            <input id="inputValue" type="search" class="search-input" placeholder="search" />
+            <div id="searchResults" class="icon-con">
+                <i class="fa-solid fa-magnifying-glass icon"></i>
+            </div>
+            </div>
+            <p id="error" class="error"> </p>
+            <div class="card">
+            <div class="weather">
+                 <img src="mist.png" class="season" />
+                 <h1 class="degree">22°C</h1>
+                 <h2 class="city">New York</h2>
+            <div class="results">
+                <div class="result-inner1">
+                    <img src="humidity.png" />
+                    <div class="condi">
+                        <h2 class="per">50%</h2>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="result-inner2">
+                    <img src="wind.png" />
+                    <div class="condi">
+                        <h2 class="wind">15 km/h</h2>
+                        <p>Wind speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+    <script>
+        
+        
+        const searchResults = document.getElementById("searchResults")
+        
+        async function checkWeather(){
+            const inputValue = document.getElementById("inputValue")
+            const error = document.getElementById("error")
+            const season = document.querySelector(".season")
+            const city = inputValue.value
+            const apiurl = `https://api.openweathermap.org/data/2.5/weather?&appid=27f8129b25f251af460b11ccc8a84489&units=metric&q=${city}`
+        
+            const response = await fetch(apiurl)
+            const data = await response.json()
+            console.log(data)
+
+            if(response.ok === true){
+                
+                document.querySelector(".city").innerHTML = data.name
+                document.querySelector(".degree").innerHTML = Math.round(data.main.temp) + "°C"
+                document.querySelector(".per").innerHTML = data.main.humidity + "%"
+                document.querySelector(".wind").innerHTML = data.main.temp + " km/h"
+                
+                if(data.weather[0].main = "Clouds"){
+                    season.src = "clouds.png"
+                }
+                else if(data.weather[0].main = "Clear"){
+                    season.src = "clear.png"    
+                }
+                else if(data.weather[0].main = "Drizzle"){
+                    season.src = "drizzle.png"    
+                }
+                else if(data.weather[0].main = "Snow"){
+                    season.src = "snow.png"    
+                }
+                else if(data.weather[0].main = "Mist"){
+                    season.src = "mist.png"    
+                }
+                else if(data.weather[0].main = "Rain"){
+                    season.src = "rain.png"    
+                }    
+                
+                document.querySelector(".card").style.display = "block"
+                document.querySelector(".error").style.display = "none"
+
+            }
+            else{
+                error.textContent = data.message
+
+                document.querySelector(".card").style.display = "none"
+                document.querySelector(".error").style.display = "block"
+            }
+        } 
+
+        searchResults.addEventListener('click',() => {
+            checkWeather(inputValue)
+            
+        })
+     </script>   
+    <script src="https://kit.fontawesome.com/f84e312a46.js" crossorigin="anonymous"></script>
+</body>
+</html>
